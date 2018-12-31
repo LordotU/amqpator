@@ -1,0 +1,72 @@
+{
+  "name": "amqpator",
+  "version": "1.0.0",
+  "description": "Wrapper for amqplib which simplifies its usage for publishing and subscribing",
+  "keywords": [
+    "amqp",
+    "amqplib",
+    "pub",
+    "rabbitmq",
+    "sub"
+  ],
+  "license": "MIT",
+  "author": "Oleg Levshin <LevshinO@gmail.com>",
+  "main": "src/index.js",
+  "scripts": {
+    "coverage": "cat ./__tests__/coverage/lcov.info | coveralls",
+    "lint": "eslint -c ./.eslintrc.js ./src",
+    "pre-commit": "lint-staged && yarn coverage",
+    "test": "jest --detectOpenHandles --runInBand"
+  },
+  "config": {
+    "pre-git": {
+      "allow-untracked-files": true,
+      "pre-commit": [
+        "yarn pre-commit"
+      ]
+    }
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageDirectory": "<rootDir>/__tests__/coverage",
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/__tests__/"
+    ],
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "html"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/__tests__/coverage/"
+    ],
+    "verbose": false
+  },
+  "dependencies": {
+    "amqplib": "^0.5.3",
+    "nanodelay": "^0.1.4",
+    "nanoid": "^2.0.0"
+  },
+  "devDependencies": {
+    "coveralls": "^3.0.2",
+    "eslint": "^5.11.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "got": "^9.5.0",
+    "jest": "^23.6.0",
+    "lint-staged": "^8.1.0",
+    "pre-git": "^3.17.1"
+  },
+  "lint-staged": {
+    "*.js": [
+      "yarn eslint -c ./.eslintrc.js",
+      "git add"
+    ]
+  },
+  "release": {
+    "analyzeCommits": "simple-commit-message"
+  }
+}

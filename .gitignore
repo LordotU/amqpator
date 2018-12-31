@@ -1,0 +1,9 @@
+.idea
+.vscode
+
+node_modules/
+
+__tests__/coverage/
+
+yarn-error.log
+.coveralls.yml
