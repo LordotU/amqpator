@@ -1,6 +1,6 @@
 {
   "name": "amqpator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Wrapper for amqplib which simplifies its usage for publishing and subscribing",
   "keywords": [
     "amqp",
@@ -9,8 +9,15 @@
     "rabbitmq",
     "sub"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LordotU/amqpator"
+  },
   "license": "MIT",
   "author": "Oleg Levshin <LevshinO@gmail.com>",
+  "files": [
+    "src"
+  ],
   "main": "src/index.js",
   "scripts": {
     "coverage": "cat ./__tests__/coverage/lcov.info | coveralls",
