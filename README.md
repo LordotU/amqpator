@@ -15,11 +15,22 @@ yarn add amqpator
 
 ## Testing
 
+You should have running RabbitMQ instance with management plugin installed.
+
 ```bash
 yarn test
 ```
 
-***Note:*** you should have running RabbitMQ instance with management plugin installed.
+Also, you may set connection params for this instance via environment variables:
+
+```bash
+export AMQPATOR_HOST = 'localhost'
+export AMQPATOR_PORT = 5672
+export AMQPATOR_USERNAME = 'guest'
+export AMQPATOR_PASSWORD = 'guest'
+export AMQPATOR_VHOST = '/'
+export AMQPATOR_PORT_HTTP = 15672
+```
 
 ## Usage
 
@@ -62,7 +73,9 @@ amqp.getSub({
     exclusive: true,
   },
 
-  onQueueMsg: ({ echo }) => console.log(echo),
+  onQueueMsg: ({ echo }, fields, properties) => {
+    console.log(echo, fields, properties)
+  },
 }).then(
   _ => _.subscribe()
 )
@@ -75,6 +88,28 @@ amqp.getPub({
 
   routingKey,
 }).then(
-  _ => _.publish({ echo: 'Echo' })
+  _ => _.publish({
+    message: { echo: 'Echo' },
+    messageOptions: {
+      // expiration (string)
+      // userId (string)
+      // CC (string or array of string)
+      // priority (positive integer)
+      // persistent (boolean)
+      // deliveryMode (boolean or numeric)
+      // mandatory (boolean)
+      // BCC (string or array of string)
+      // immediate (boolean)
+      // contentType (string)
+      // contentEncoding (string)
+      // headers (object)
+      // correlationId (string)
+      // replyTo (string)
+      // messageId (string)
+      // timestamp (positive number)
+      // type (string)
+      // appId (string)
+    },
+  )
 )
 ```
