@@ -18,7 +18,9 @@ yarn add amqpator
 You should have running RabbitMQ instance with management plugin installed.
 
 ```bash
-yarn test
+yarn test:jest # Run Jest with coverage collection
+yarn test:coverage # Send coverage to .coveralls.io
+yarn test # yarn test:jest && yarn test:coverage
 ```
 
 Also, you may set connection params for this instance via environment variables:
