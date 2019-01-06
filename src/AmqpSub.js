@@ -115,7 +115,11 @@ class AmqpSub {
       }
 
       try {
-        await this.onQueueMsg(JSON.parse(msg.content.toString('utf-8')))
+        await this.onQueueMsg(
+          JSON.parse(msg.content.toString('utf-8')),
+          msg.fields,
+          msg.properties,
+        )
         await this.channel.ack(msg)
       } catch (error) {
         this.logger.error('AmqpSub channel queue message processing assertion error!', { error })
