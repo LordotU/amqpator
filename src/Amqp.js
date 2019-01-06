@@ -12,18 +12,16 @@ const AmqpSub = require('./AmqpSub')
 
 
 /**
- * Wrapper around amqplib for simplifiyng pub/sub
- *
- * @class Amqp
+ * Wrapper around {@link http://www.squaremobius.net/amqp.node/|amqplib} for simplifiyng pub/sub
  */
 class Amqp {
 
   /**
-   * Creates an instance of Amqp.
+   * Creates an instance of Amqp
    *
-   * @memberof Amqp
+   * @constructs Amqp
    *
-   * @param {Object}   options
+   * @param {Object}   [options={}]
    * @param {String}   [options.host='']
    * @param {String}   [options.username='']
    * @param {Object}   [options.logger=console]
@@ -118,7 +116,7 @@ class Amqp {
    *
    * @memberof Amqp
    *
-   * @returns {Promise}
+   * @returns {Promise.<ChannelModel>}
    */
   async connect () {
     try {
@@ -173,8 +171,9 @@ class Amqp {
    * Creates a connection to the AMQP server if not exists
    *
    * @memberof Amqp
+   * @private
    *
-   * @returns {Promise}
+   * @returns {Promise.<ChannelModel>}
    */
   createConnectionIfNotExists () {
     return this.connection || this.connect()
@@ -204,7 +203,9 @@ class Amqp {
    * @param {Object} [options.onConnectionError=()=>{}]
    * @param {Object} [options.type='default']
    *
-   * @returns {Promise}
+   * @private
+   *
+   * @returns {Promise.<Channel|ConfirmChannel>}
    */
   async addChannel ({
     _id = null,
@@ -259,6 +260,10 @@ class Amqp {
    * @memberof Amqp
    *
    * @param {String} _id
+   *
+   * @private
+   *
+   * @returns {Promise}
    */
   async closeChannel (_id) {
     try {
@@ -273,6 +278,10 @@ class Amqp {
    * Closes all open channels
    *
    * @memberof Amqp
+   *
+   * @private
+   *
+   * @returns {Promise}
    */
   async closeChannelAll () {
     await Promise.all([...this.channels.keys()].map(_id => this.closeChannel(_id)))
@@ -285,6 +294,10 @@ class Amqp {
    * @memberof Amqp
    *
    * @param {String} _id
+   *
+   * @protected
+   *
+   * @returns {Promise}
    */
   async removeChannel (_id) {
     await this.closeChannel(_id)
@@ -300,6 +313,8 @@ class Amqp {
    * @param {Object} [options={}]
    *
    * @returns {Promise<AmqpPub>}
+   *
+   * @see {@link #AmqpPub|AmqpPub}
    */
   async getPub (options = {}) {
     await this.createConnectionIfNotExists()
@@ -348,6 +363,8 @@ class Amqp {
    * @param {Object} [options={}]
    *
    * @returns {Promise<AmqpSub>}
+   *
+   * @see {@link #AmqpSub|AmqpSub}
    */
   async getSub (options = {}) {
     await this.createConnectionIfNotExists()

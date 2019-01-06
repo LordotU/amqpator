@@ -6,20 +6,19 @@ const { ConfirmChannel } = require('amqplib/lib/channel_model')
 
 
 /**
- * Wrapper around amqplib ConfirmChannel
+ * Wrapper around {@link http://www.squaremobius.net/amqp.node/|amqplib}
+ * {@link http://www.squaremobius.net/amqp.node/channel_api.html#confirmchannel|ConfirmChannel}
  *
- * @class AmqpPub
- *
- * @see Aqmp
+ * @see {@link #Amqp|Amqp}
  */
 class AmqpPub {
 
   /**
-   * Creates an instance of AmqpPub.
+   * Creates an instance of AmqpPub
    *
-   * @memberof AmqpPub
+   * @constructs AmqpPub
    *
-   * @param {Object}         options
+   * @param {Object}         [options={}]
    * @param {ConfirmChannel} [options.channel=null]
    * @param {String}         [options.exchange='']
    * @param {Object}         [options.exchangeOptions={}]
@@ -62,11 +61,11 @@ class AmqpPub {
    *
    * @memberof AmqpPub
    *
-   * @param {Object} params
-   * @param {String} [params.message='']
-   * @param {Object} [params.messageOptions={}]
+   * @param {Object}               [params={}]
+   * @param {Number|String|Object} [params.message='']
+   * @param {Object}               [params.messageOptions={}]
    *
-   * @returns {Promise<undefined>}
+   * @returns {Promise}
    */
   async publish ({
     message = '',
@@ -105,6 +104,8 @@ class AmqpPub {
    * Removes appropriate confirmation channel
    *
    * @memberof AmqpPub
+   *
+   * @returns {Promise}
    */
   async remove () {
     if (this._amqp && this._id) {

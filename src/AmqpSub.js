@@ -6,20 +6,19 @@ const { Channel } = require('amqplib/lib/channel_model')
 
 
 /**
- * Wrapper around amqplib Channel
+ * Wrapper around {@link http://www.squaremobius.net/amqp.node/|amqplib}
+ * {@link http://www.squaremobius.net/amqp.node/channel_api.html#channel|Channel}
  *
- * @class AmqpSub
- *
- * @see Amqp
+ * @see {@link #Amqp|Amqp}
  */
 class AmqpSub {
 
   /**
    * Creates an instance of AmqpSub
    *
-   * @memberof AmqpSub
+   * @constructs AmqpSub
    *
-   * @param {Object}   options
+   * @param {Object}   [options={}]
    * @param {Channel}  [options.channel=null]
    * @param {String}   [options.exchange='']
    * @param {Object}   [options.exchangeOptions={}]
@@ -78,9 +77,11 @@ class AmqpSub {
    *
    * @memberof AmqpSub
    *
-   * @param {Object}   params
+   * @param {Object}  [params={}]
    * @param {Boolean} [params.ackAlways=true]
    * @param {Object}  [params.options={}]
+   *
+   * @returns {Promise}
    */
   async subscribe ({
     ackAlways = true,
@@ -130,7 +131,9 @@ class AmqpSub {
   /**
    * Removes appropriate channel
    *
-   * @memberof AmqpPub
+   * @memberof AmqpSub
+   *
+   * @returns {Promise}
    */
   async remove () {
     if (this._amqp && this._id) {
