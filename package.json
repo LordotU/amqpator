@@ -65,7 +65,7 @@
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "got": "^9.5.0",
-    "jest": "^23.6.0",
+    "jest": "^24.9.0",
     "jsdoc-to-markdown": "^4.0.1",
     "lint-staged": "^8.1.0",
     "pre-git": "^3.17.1"
