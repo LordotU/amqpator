@@ -1,6 +1,7 @@
 # Amqpator
 
 [![License](https://img.shields.io/badge/License-MIT-000000.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/LordotU/amqpator.svg?branch=master)](https://travis-ci.org/LordotU/amqpator)
 [![Coverage Status](https://coveralls.io/repos/github/LordotU/amqpator/badge.svg)](https://coveralls.io/github/LordotU/amqpator)
 
 ## Description
