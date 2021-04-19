@@ -21,15 +21,15 @@
   ],
   "scripts": {
     "docs": "jsdoc2md src/*.js > docs/index.md",
-    "lint": "eslint -c ./.eslintrc.js ./src",
+    "lint": "eslint -c ./.eslintrc.js",
     "pre-commit": "lint-staged",
-    "test": "yarn test:jest && yarn test:coverage",
+    "test": "npm run test:jest && npm run test:coverage",
     "test:jest": "jest --detectOpenHandles --runInBand",
     "test:coverage": "cat ./__tests__/coverage/lcov.info | coveralls"
   },
   "lint-staged": {
     "*.js": [
-      "yarn eslint -c ./.eslintrc.js",
+      "npm run lint",
       "git add"
     ]
   },
@@ -37,7 +37,7 @@
     "pre-git": {
       "allow-untracked-files": true,
       "pre-commit": [
-        "yarn pre-commit"
+        "npm run pre-commit"
       ]
     }
   },
@@ -61,7 +61,6 @@
     "verbose": false
   },
   "dependencies": {
-    "amqplib": "^0.7.1",
     "nanodelay": "^1.0.8",
     "nanoid": "^3.1.22"
   },
@@ -75,6 +74,9 @@
     "jsdoc-to-markdown": "^6.0.1",
     "lint-staged": "^10.5.4",
     "pre-git": "^3.17.1"
+  },
+  "peerDependencies": {
+    "amqplib": "^0.5.5 || ^0.6 || ^0.7"
   },
   "release": {
     "analyzeCommits": "simple-commit-message"

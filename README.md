@@ -11,7 +11,8 @@ Wrapper for [amqplib](http://www.squaremobius.net/amqp.node/) which simplifies i
 ## Installation
 
 ```bash
-yarn add amqpator
+npm i --save amqpator
+npx install-peerdeps --save amqplib # Optionally
 ```
 
 ## Testing
@@ -19,9 +20,9 @@ yarn add amqpator
 You should have running RabbitMQ instance with management plugin installed.
 
 ```bash
-yarn test:jest # Run Jest with coverage collection
-yarn test:coverage # Send coverage to .coveralls.io
-yarn test # yarn test:jest && yarn test:coverage
+npm run test:jest     # Run Jest with coverage collection
+npm run test:coverage # Send coverage to .coveralls.io
+npm run test          # npm run test:jest && npm run test:coverage
 ```
 
 Also, you may set connection params for this instance via environment variables:
