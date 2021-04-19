@@ -1,11 +1,10 @@
 /* eslint-disable no-underscore-dangle */
 
-'use strict'
+const qs = require('querystring')
 
 const amqp = require('amqplib')
 const { delay } = require('nanodelay')
 const { nanoid: id } = require('nanoid')
-const qs = require('querystring')
 
 const AmqpPub = require('./AmqpPub')
 const AmqpSub = require('./AmqpSub')
