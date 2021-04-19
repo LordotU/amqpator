@@ -12,7 +12,7 @@ Wrapper for [amqplib](http://www.squaremobius.net/amqp.node/) which simplifies i
 
 ```bash
 npm i --save amqpator
-npx install-peerdeps --save amqplib # Optionally
+npx install-peerdeps --save amqpator # Optionally
 ```
 
 ## Testing

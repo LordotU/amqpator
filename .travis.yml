@@ -1,13 +1,15 @@
 addons:
   apt:
     packages:
-    - rabbitmq-server 
+    - rabbitmq-server
 
 language: node_js
 
 node_js:
   - 10
   - 12
+  - 14
 
 before_script:
   - sudo rabbitmq-plugins enable rabbitmq_management
+  - npm i --no-save amqplib
