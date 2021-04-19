@@ -1,7 +1,5 @@
 /* eslint-disable no-undef */
 
-'use strict'
-
 const got = require('got')
 
 const Amqp = require('../src')
@@ -166,7 +164,11 @@ describe('AmqpSub', () => {
         try {
           const { body: { messages } } = await got(
             `http://${TEST_HOST}:${TEST_PORT_HTTP}/api/queues/${encodeURIComponent(TEST_VHOST)}/${TEST_QUEUE}`,
-            { auth: `${TEST_USERNAME}:${TEST_PASSWORD}`, json: true },
+            {
+              username: TEST_USERNAME,
+              password: TEST_PASSWORD,
+              responseType: 'json',
+            },
           )
 
           if (parseInt(messages, 10) <= 0) {

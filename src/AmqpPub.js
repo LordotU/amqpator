@@ -1,7 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 
-'use strict'
-
 const { ConfirmChannel } = require('amqplib/lib/channel_model')
 
 
@@ -88,7 +86,7 @@ class AmqpPub {
         this.routingKey,
         Buffer.from(JSON.stringify(message), 'utf-8'),
         messageOptions,
-        (error) => {
+        error => {
           if (error) {
             return reject(error)
           }

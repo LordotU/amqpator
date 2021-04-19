@@ -1,7 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 
-'use strict'
-
 const { Channel } = require('amqplib/lib/channel_model')
 
 
@@ -109,7 +107,7 @@ class AmqpSub {
 
     this.channel.prefetch(this.prefetch)
 
-    this.channel.consume(this.queue, async (msg) => {
+    this.channel.consume(this.queue, async msg => {
       if (! msg || ! msg.content) {
         return
       }

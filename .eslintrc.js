@@ -1,46 +1,73 @@
-const path = require('path')
-
-
 module.exports = {
-  'extends': 'airbnb-base',
-  'env': {
-    'es6': true,
-    'node': true,
+  extends: 'airbnb-base',
+  globals: {
+    global: true,
+    console: true,
+    window: true,
+    require: true,
   },
-  'parserOptions': {
-    'ecmaVersion': 2018,
-    'sourceType': 'script',
+  parserOptions: {
+    ecmaVersion: 2018,
+    requireConfigFile: false,
+    // sourceType: 'module',
   },
-  'rules': {
-    'camelcase': 0,
+  rules: {
+    'arrow-parens': [
+      'error',
+      'as-needed',
+    ],
+    camelcase: 0,
     'guard-for-in': 0,
-    'import/no-unresolved': 0,
+    'import/extensions': 0,
     'import/no-dynamic-require': 0,
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: true,
+      },
+    ],
+    'import/no-unresolved': 0,
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index']],
+        'newlines-between': 'always',
+      },
+    ],
     'linebreak-style': [
       'error',
       'unix',
     ],
     'max-len': [
       'error',
-      120,
+      {
+        code: 120,
+      },
     ],
     'no-await-in-loop': 0,
     'no-console': 0,
     'no-extra-boolean-cast': 0,
     'no-mixed-operators': 0,
+    'no-multiple-empty-lines': ['error', {
+      max: 2,
+    }],
     'no-plusplus': 0,
     'no-restricted-syntax': 0,
+    'no-template-curly-in-string': 0,
     'no-useless-escape': 0,
-    'operator-linebreak': [
-      'error',
-      'after',
-    ],
+    'no-underscore-dangle': 0,
+    'operator-linebreak': ['error', 'after', {
+      overrides: {
+        '?': 'ignore',
+        ':': 'ignore',
+      },
+    }],
     'padded-blocks': 0,
-    'quotes': [
+    quotes: [
       'error',
       'single',
     ],
-    'semi': [
+    semi: [
       'error',
       'never',
     ],
@@ -51,17 +78,10 @@ module.exports = {
     'space-unary-ops': [
       'error',
       {
-        'overrides': {
+        overrides: {
           '!': true,
         },
       },
     ],
-  },
-  'settings': {
-    'import/resolver': {
-      'node': {
-        paths: [path.resolve(__dirname)],
-      },
-    },
   },
 }
