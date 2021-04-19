@@ -3,8 +3,8 @@
 'use strict'
 
 const amqp = require('amqplib')
-const delay = require('nanodelay')
-const id = require('nanoid')
+const { delay } = require('nanodelay')
+const { nanoid: id } = require('nanoid')
 const qs = require('querystring')
 
 const AmqpPub = require('./AmqpPub')
