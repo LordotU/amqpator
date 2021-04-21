@@ -1,0 +1,14 @@
+{
+    "extends": "./tsconfig.checks",
+    "include": ["src"],
+    "compilerOptions": {
+        "declaration": true,
+        "declarationDir": "./dist/@types",
+        "lib": ["es2018"],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "target": "es2018"
+    }
+}

@@ -2,7 +2,7 @@
 
 const got = require('got')
 
-const Amqp = require('../src')
+const { Amqp } = require('../dist')
 
 
 const TEST_HOST = process.env.AMQPATOR_HOST || 'localhost'
