@@ -6,11 +6,8 @@ module.exports = {
     window: true,
     require: true,
   },
-  parserOptions: {
-    ecmaVersion: 2018,
-    requireConfigFile: false,
-    // sourceType: 'module',
-  },
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
   rules: {
     'arrow-parens': [
       'error',
@@ -34,6 +31,7 @@ module.exports = {
         'newlines-between': 'always',
       },
     ],
+    'import/prefer-default-export': 0,
     'linebreak-style': [
       'error',
       'unix',
@@ -83,5 +81,6 @@ module.exports = {
         },
       },
     ],
+    '@typescript-eslint/member-ordering': 'error',
   },
 }

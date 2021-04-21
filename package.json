@@ -15,21 +15,25 @@
   },
   "license": "MIT",
   "author": "Oleg Levshin <LevshinO@gmail.com>",
-  "main": "src/index.js",
+  "main": "dist/index.js",
+  "types": "dist/@types/index.d.ts",
   "files": [
-    "src"
+    "dist"
   ],
   "scripts": {
+    "clean": "rm -rf ./dist",
     "docs": "jsdoc2md src/*.js > docs/index.md",
-    "lint": "eslint -c ./.eslintrc.js",
+    "lint": "eslint -c ./.eslintrc.js ./src/**/*.{js,ts}",
     "pre-commit": "lint-staged",
-    "test": "npm run test:jest && npm run test:coverage",
+    "prepublish": "npm run tsc",
+    "test": "npm run tsc && npm run test:jest && npm run test:coverage",
     "test:jest": "jest --detectOpenHandles --runInBand",
-    "test:coverage": "cat ./__tests__/coverage/lcov.info | coveralls"
+    "test:coverage": "cat ./__tests__/coverage/lcov.info | coveralls",
+    "tsc": "npm run clean && tsc -p tsconfig.json"
   },
   "lint-staged": {
-    "*.js": [
-      "npm run lint",
+    "*.{js,ts}": [
+      "eslint -c ./.eslintrc.js",
       "git add"
     ]
   },
@@ -61,10 +65,13 @@
     "verbose": false
   },
   "dependencies": {
+    "@types/amqplib": "^0.5.17",
     "nanodelay": "^1.0.8",
     "nanoid": "^3.1.22"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
     "coveralls": "^3.1.0",
     "eslint": "^7.24.0",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -73,7 +80,8 @@
     "jest": "^26.6.3",
     "jsdoc-to-markdown": "^6.0.1",
     "lint-staged": "^10.5.4",
-    "pre-git": "^3.17.1"
+    "pre-git": "^3.17.1",
+    "typescript": "^4.2.4"
   },
   "peerDependencies": {
     "amqplib": "^0.5.5 || ^0.6 || ^0.7"

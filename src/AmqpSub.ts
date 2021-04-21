@@ -1,34 +1,38 @@
-/* eslint-disable no-underscore-dangle */
+import type * as AmqpTypes from 'amqplib'
 
-const { Channel } = require('amqplib/lib/channel_model')
+import type * as AmqpatorTypes from './types'
 
 
 /**
  * Wrapper around {@link http://www.squaremobius.net/amqp.node/|amqplib}
  * {@link http://www.squaremobius.net/amqp.node/channel_api.html#channel|Channel}
- *
- * @see {@link #Amqp|Amqp}
  */
-class AmqpSub {
+export class AmqpSub {
+
+  private channel: AmqpTypes.Channel | AmqpTypes.ConfirmChannel
+
+  private exchange: string
+
+  private exchangeOptions: AmqpatorTypes.ExchangeOptionsWithType
+
+  // eslint-disable-next-line no-undef
+  private logger: Console
+
+  private onQueueMsg: Function
+
+  private prefetch: number
+
+  private routingKey: string
+
+  private queue: string
+
+  private queueOptions: AmqpTypes.Options.AssertQueue
 
   /**
    * Creates an instance of AmqpSub
-   *
-   * @constructs AmqpSub
-   *
-   * @param {Object}   [options={}]
-   * @param {Channel}  [options.channel=null]
-   * @param {String}   [options.exchange='']
-   * @param {Object}   [options.exchangeOptions={}]
-   * @param {Object}   [options.logger=console]
-   * @param {Function} [options.onQueueMsg=()=>{}]
-   * @param {Number}   [options.prefetch=0]
-   * @param {String}   [options.queue='']
-   * @param {Object}   [options.queueOptions={}]
-   * @param {String}   [options.routingKey='']
    */
   constructor ({
-    channel = null,
+    channel,
     exchange = '',
     exchangeOptions = {},
     logger = console,
@@ -37,11 +41,7 @@ class AmqpSub {
     queue = '',
     queueOptions = {},
     routingKey = '',
-  } = {}) {
-    if (! (channel instanceof Channel)) {
-      throw new TypeError('AmqpSub `channel` should be an isntance of Channel!')
-    }
-
+  }: AmqpatorTypes.AmqpSubConstructor) {
     if ([exchangeOptions, queueOptions].some(o => o && (Array.isArray(o) || typeof o !== 'object'))) {
       throw new TypeError('AmqpSub channel `queueOptions` and `exchangeOptions` should be an objects!')
     }
@@ -54,8 +54,12 @@ class AmqpSub {
       throw new TypeError('AmqpSub channel `exchange`, `routingKey` and `queue` should be a strings!')
     }
 
-    if (logger && ['debug', 'info', 'error'].some(m => typeof logger[m] !== 'function')) {
-      throw new TypeError('AmqpSub logger should implement `debug()`, `info()` and `error()` methods!')
+    if (! logger ||
+      typeof logger.info !== 'function' ||
+      typeof logger.error !== 'function' ||
+      typeof logger.debug !== 'function'
+    ) {
+      throw new TypeError('Amqp logger should implement `debug()`, `info()` and `error()` methods!')
     }
 
     this.channel = channel
@@ -72,24 +76,17 @@ class AmqpSub {
 
   /**
    * Subscribes to messages
-   *
-   * @memberof AmqpSub
-   *
-   * @param {Object}  [params={}]
-   * @param {Boolean} [params.ackAlways=true]
-   * @param {Object}  [params.options={}]
-   *
-   * @returns {Promise}
    */
   async subscribe ({
     ackAlways = true,
     options = {},
-  } = {}) {
+  }: AmqpatorTypes.AmqpSubSubscribe = {}): Promise<void> {
     try {
       const {
         type = 'fanout',
         ...exchangeOptions
       } = this.exchangeOptions
+
       await this.channel.assertExchange(this.exchange, type, exchangeOptions)
     } catch (error) {
       this.logger.error('AmqpSub channel exchange assertion error!', { error })
@@ -118,40 +115,16 @@ class AmqpSub {
           msg.fields,
           msg.properties,
         )
-        await this.channel.ack(msg)
+
+        this.channel.ack(msg)
       } catch (error) {
         this.logger.error('AmqpSub channel queue message processing assertion error!', { error })
 
         if (ackAlways) {
-          await this.channel.ack(msg)
+          this.channel.ack(msg)
         }
       }
     }, options)
   }
 
-
-  /**
-   * Removes appropriate channel
-   *
-   * @memberof AmqpSub
-   *
-   * @returns {Promise}
-   */
-  async remove () {
-    if (this._amqp && this._id) {
-      await this._amqp.removeChannel(this._id)
-    } else {
-      try {
-        await this.channel.close()
-      } catch (error) {
-        // eslint-disable-next-line no-empty
-      }
-    }
-
-    delete this
-  }
-
 }
-
-
-module.exports = AmqpSub

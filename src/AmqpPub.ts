@@ -1,39 +1,34 @@
-/* eslint-disable no-underscore-dangle */
+import type * as AmqpTypes from 'amqplib'
 
-const { ConfirmChannel } = require('amqplib/lib/channel_model')
+import type * as AmqpatorTypes from './types'
 
 
 /**
  * Wrapper around {@link http://www.squaremobius.net/amqp.node/|amqplib}
  * {@link http://www.squaremobius.net/amqp.node/channel_api.html#confirmchannel|ConfirmChannel}
- *
- * @see {@link #Amqp|Amqp}
  */
-class AmqpPub {
+export class AmqpPub {
+  private channel: AmqpTypes.Channel | AmqpTypes.ConfirmChannel
+
+  private exchange: string
+
+  private exchangeOptions: AmqpatorTypes.ExchangeOptionsWithType
+
+  // eslint-disable-next-line no-undef
+  private logger: Console
+
+  private routingKey: string
 
   /**
    * Creates an instance of AmqpPub
-   *
-   * @constructs AmqpPub
-   *
-   * @param {Object}         [options={}]
-   * @param {ConfirmChannel} [options.channel=null]
-   * @param {String}         [options.exchange='']
-   * @param {Object}         [options.exchangeOptions={}]
-   * @param {Object}         [options.logger=console]
-   * @param {String}         [options.routingKey='']
    */
   constructor ({
-    channel = null,
+    channel,
     exchange = '',
     exchangeOptions = {},
     logger = console,
     routingKey = '',
-  } = {}) {
-    if (! (channel instanceof ConfirmChannel)) {
-      throw new TypeError('AmqpPub `channel` should be an isntance of ConfirmChannel!')
-    }
-
+  }: AmqpatorTypes.AmqpPubConstructor) {
     if ([exchange, routingKey].every(v => ! v)) {
       throw new TypeError('AmqpPub channel `exchange` and `routingKey` cannot be both empty!')
     }
@@ -42,8 +37,12 @@ class AmqpPub {
       throw new TypeError('AmqpPub channel `exchangeOptions` should be an object!')
     }
 
-    if (logger && ['debug', 'info', 'error'].some(m => typeof logger[m] !== 'function')) {
-      throw new TypeError('AmqpPub logger should implement `debug()`, `info()` and `error()` methods!')
+    if (! logger ||
+      typeof logger.info !== 'function' ||
+      typeof logger.error !== 'function' ||
+      typeof logger.debug !== 'function'
+    ) {
+      throw new TypeError('Amqp logger should implement `debug()`, `info()` and `error()` methods!')
     }
 
     this.channel = channel
@@ -56,24 +55,17 @@ class AmqpPub {
 
   /**
    * Publishes message
-   *
-   * @memberof AmqpPub
-   *
-   * @param {Object}               [params={}]
-   * @param {Number|String|Object} [params.message='']
-   * @param {Object}               [params.messageOptions={}]
-   *
-   * @returns {Promise}
    */
   async publish ({
     message = '',
     messageOptions = {},
-  } = {}) {
+  }: AmqpatorTypes.AmqpPubPublish = {}): Promise<boolean> {
     try {
       const {
         type = 'fanout',
         ...exchangeOptions
       } = this.exchangeOptions
+
       await this.channel.assertExchange(this.exchange, type, exchangeOptions)
     } catch (error) {
       this.logger.error('AmqpSub channel exchange assertion error!', { error })
@@ -91,35 +83,10 @@ class AmqpPub {
             return reject(error)
           }
 
-          return resolve()
+          return resolve(true)
         },
       )
     })
   }
 
-
-  /**
-   * Removes appropriate confirmation channel
-   *
-   * @memberof AmqpPub
-   *
-   * @returns {Promise}
-   */
-  async remove () {
-    if (this._amqp && this._id) {
-      await this._amqp.removeChannel(this._id)
-    } else {
-      try {
-        await this.channel.close()
-      } catch (error) {
-        // eslint-disable-next-line no-empty
-      }
-    }
-
-    delete this
-  }
-
 }
-
-
-module.exports = AmqpPub
