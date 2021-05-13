@@ -27,7 +27,7 @@
     "lint": "eslint -c ./.eslintrc.js ./src/**/*.{js,ts}",
     "pre-commit": "lint-staged",
     "prepublish": "npm run tsc",
-    "test": "npm run tsc && npm run test:jest && npm run test:coverage",
+    "test": "npm run test:jest && npm run test:coverage",
     "test:jest": "jest --detectOpenHandles --runInBand",
     "test:coverage": "cat ./__tests__/coverage/lcov.info | coveralls",
     "tsc": "npm run clean && tsc -p tsconfig.json"
@@ -46,31 +46,13 @@
       ]
     }
   },
-  "jest": {
-    "collectCoverage": true,
-    "coverageDirectory": "<rootDir>/__tests__/coverage",
-    "coveragePathIgnorePatterns": [
-      "<rootDir>/node_modules/",
-      "<rootDir>/__tests__/"
-    ],
-    "coverageReporters": [
-      "json",
-      "lcov",
-      "text",
-      "html"
-    ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/node_modules/",
-      "<rootDir>/__tests__/coverage/"
-    ],
-    "verbose": false
-  },
   "dependencies": {
     "@types/amqplib": "^0.5.17",
     "nanodelay": "^1.0.8",
     "nanoid": "^3.1.22"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.23",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "coveralls": "^3.1.0",
@@ -82,6 +64,7 @@
     "jsdoc-to-markdown": "^6.0.1",
     "lint-staged": "^10.5.4",
     "pre-git": "^3.17.1",
+    "ts-jest": "^26.5.6",
     "typescript": "^4.2.4"
   },
   "peerDependencies": {

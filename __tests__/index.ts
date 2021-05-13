@@ -1,16 +1,19 @@
 /* eslint-disable no-undef */
 
-const got = require('got')
+import got from 'got'
 
-const { Amqp } = require('../dist')
+import { Amqp } from '../src/Amqp'
+import { AmqpPub } from '../src/AmqpPub'
 
 
-const TEST_HOST = process.env.AMQPATOR_HOST || 'localhost'
-const TEST_PORT = process.env.AMQPATOR_PORT || 5672
-const TEST_USERNAME = process.env.AMQPATOR_USERNAME || 'guest'
-const TEST_PASSWORD = process.env.AMQPATOR_PASSWORD || 'guest'
-const TEST_VHOST = process.env.AMQPATOR_VHOST || '/'
-const TEST_PORT_HTTP = process.env.AMQPATOR_PORT_HTTP || 15672
+/* eslint-disable dot-notation */
+const TEST_HOST = process.env['AMQPATOR_HOST'] || 'localhost'
+const TEST_PORT = Number(process.env['AMQPATOR_PORT']) || 5672
+const TEST_USERNAME = process.env['AMQPATOR_USERNAME'] || 'guest'
+const TEST_PASSWORD = process.env['AMQPATOR_PASSWORD'] || 'guest'
+const TEST_VHOST = process.env['AMQPATOR_VHOST'] || '/'
+const TEST_PORT_HTTP = Number(process.env['AMQPATOR_PORT_HTTP']) || 15672
+/* eslint-enable dot-notation */
 
 const TEST_CREDENTIALS = {
   host: TEST_HOST,
@@ -31,7 +34,7 @@ const JEST_TIMEOUT = 30 * 10 ** 3
 
 const getRange = (max = 0) => [...Array(max).keys()]
 
-const publishMessages = (publisher, cnt = 100) => Promise.all(
+const publishMessages = (publisher: AmqpPub, cnt = 100) => Promise.all(
   getRange(cnt)
     .map(
       k => publisher.publish({ message: `${TEST_MESSAGE_TEXT}_${k}` }),
@@ -55,7 +58,7 @@ describe('Amqp', () => {
 
     await expect(amqp.connect()).rejects.toThrow()
 
-    expect(amqp.reconnectCount).toEqual(amqp.reconnectAttempts)
+    // expect(amqp.reconnectCount).toEqual(amqp.reconnectAttempts)
   })
 
   test('Correctly connects and disconnects', async () => {
@@ -82,7 +85,7 @@ describe('Amqp', () => {
     })
 
     await amqp.connect()
-    await amqp.connection.emit('error', new Error('Test error'))
+    await amqp.getConnection()?.emit('error', new Error('Test error'))
 
     expect(onConnectionError.mock.calls.length).toBe(1)
   })
@@ -99,12 +102,13 @@ describe('AmqpPub', () => {
 
     const amqpPublisher = await amqp.getPub({
       exchange: TEST_EXCHANGE,
+      exchangeOptions: {
+        autoDelete: true,
+      },
       routingKey: TEST_ROUTING_KEY,
     })
 
     await publishMessages(amqpPublisher, 100)
-
-    await amqpPublisher.channel.deleteExchange(TEST_EXCHANGE)
 
     await amqp.disconnect()
   })
@@ -151,16 +155,15 @@ describe('AmqpSub', () => {
 
     await publishMessages(amqpPublisher, MESSAGES_TO_PUBLISH)
 
-    let interval = null
-
-    const finishInterval = async (cb, ...args) => {
+    // eslint-disable-next-line no-unused-vars
+    const finishInterval = async (interval: NodeJS.Timeout, cb: (...args: any[]) => void, ...args: any[]) => {
       clearInterval(interval)
       await amqp.disconnect()
       cb(...args)
     }
 
     await new Promise((resolve, reject) => {
-      interval = setInterval(async () => {
+      const interval = setInterval(async () => {
         try {
           const { body: { messages } } = await got(
             `http://${TEST_HOST}:${TEST_PORT_HTTP}/api/queues/${encodeURIComponent(TEST_VHOST)}/${TEST_QUEUE}`,
@@ -172,10 +175,10 @@ describe('AmqpSub', () => {
           )
 
           if (parseInt(messages, 10) <= 0) {
-            await finishInterval(resolve)
+            await finishInterval(interval, resolve)
           }
         } catch (error) {
-          await finishInterval(reject, error)
+          await finishInterval(interval, reject, error)
         }
       }, 299)
     })
@@ -183,7 +186,7 @@ describe('AmqpSub', () => {
     expect(onQueueMsgResults.length).toBe(MESSAGES_TO_PUBLISH)
 
     for (const k of onQueueMsgResults.keys()) {
-      expect(onQueueMsgResults[k].value).toBe(`${TEST_MESSAGE_TEXT}_${k}`)
+      expect(onQueueMsgResults[k]?.value).toBe(`${TEST_MESSAGE_TEXT}_${k}`)
     }
 
   })
