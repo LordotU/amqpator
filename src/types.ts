@@ -16,7 +16,7 @@ export interface AmqpSubConstructor {
   exchangeOptions?: ExchangeOptionsWithType,
   // eslint-disable-next-line no-undef
   logger?: Console,
-  onQueueMsg?: Callback,
+  onQueueMsg: Callback,
   prefetch?: number,
   routingKey?: string,
   queue?: string,
@@ -68,19 +68,20 @@ export interface AmqpAddChannel {
 
 export interface AmqpGetPub {
   exchange: string,
-  exchangeOptions: amqp.Options.AssertExchange,
+  exchangeOptions?: amqp.Options.AssertExchange,
   routingKey: string,
-  onChannelClose: Callback,
-  onChannelError: Callback,
+  onChannelClose?: Callback,
+  onChannelError?: Callback,
 }
 
 export interface AmqpGetSub {
   exchange: string,
   exchangeOptions: amqp.Options.AssertExchange,
-  routingKey: string,
+  onQueueMsg: Callback,
+  onChannelClose?: Callback,
+  onChannelError?: Callback,
+  prefetch?: number,
   queue: string,
   queueOptions: amqp.Options.AssertQueue,
-  onQueueMsg: Callback,
-  onChannelClose: Callback,
-  onChannelError: Callback,
+  routingKey: string,
 }

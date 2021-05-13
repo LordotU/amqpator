@@ -38,6 +38,9 @@ export class Amqp {
 
   private connection: AmqpTypes.Connection | null = null
 
+  /**
+   * Creates an instance of Amqp
+   */
   constructor ({
     host = 'localhost',
     username = 'guest',
@@ -175,6 +178,20 @@ export class Amqp {
   }
 
   /**
+   * Closes connection to the AMQP server if exists
+   */
+  async disconnect (): Promise<void | null> {
+    return this.connection && this.connection.close()
+  }
+
+  /**
+   * Returns connection
+   */
+  getConnection (): AmqpTypes.Connection | null {
+    return this.connection
+  }
+
+  /**
    * Returns channel for publishing
    */
   async getPub (options: AmqpatorTypes.AmqpGetPub): Promise<AmqpPub> {
@@ -296,13 +313,6 @@ export class Amqp {
    */
   private async createConnectionIfNotExists (): Promise<AmqpTypes.Connection> {
     return this.connection || this.connect()
-  }
-
-  /**
-   * Closes connection to the AMQP server if exists
-   */
-  private async disconnect (): Promise<void | null> {
-    return this.connection && this.connection.close()
   }
 
   /**
