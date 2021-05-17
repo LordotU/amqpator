@@ -22,15 +22,14 @@
     "src"
   ],
   "scripts": {
-    "clean": "rm -rf ./dist",
-    "docs": "jsdoc2md src/*.js > docs/index.md",
+    "docs": "rm -rf ./docs && typedoc --entryPoints ./src/index.ts --plugin typedoc-plugin-markdown --readme none",
     "lint": "eslint -c ./.eslintrc.js ./src/**/*.{js,ts}",
     "pre-commit": "lint-staged",
     "prepublish": "npm run tsc",
     "test": "npm run test:jest && npm run test:coverage",
     "test:jest": "jest --detectOpenHandles --runInBand",
     "test:coverage": "cat ./__tests__/coverage/lcov.info | coveralls",
-    "tsc": "npm run clean && tsc -p tsconfig.json"
+    "tsc": "rm -rf ./dist && tsc -p tsconfig.json"
   },
   "lint-staged": {
     "*.{js,ts}": [
@@ -65,6 +64,8 @@
     "lint-staged": "^10.5.4",
     "pre-git": "^3.17.1",
     "ts-jest": "^26.5.6",
+    "typedoc": "^0.20.36",
+    "typedoc-plugin-markdown": "^3.8.1",
     "typescript": "^4.2.4"
   },
   "peerDependencies": {
